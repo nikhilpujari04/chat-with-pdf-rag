@@ -123,7 +123,7 @@ chat-with-pdf-rag/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/chat-with-pdf-rag.git
+git clone https://github.com/nikhilpujari04/chat-with-pdf-rag.git
 cd chat-with-pdf-rag
 
 # 2. Create and activate virtual environment
@@ -184,7 +184,7 @@ GOOGLE_API_KEY=your_gemini_api_key_here
 **Nikhil Pujari**
 - 📧 pujarinikhil04@gmail.com
 - 🎓 B.Sc. Data Science — Valia College, Mumbai
-- 🔗 [GitHub](https://github.com/YOUR_USERNAME)
+- 🔗 [GitHub](https://github.com/nikhilpujari04)
 
 ---
 
