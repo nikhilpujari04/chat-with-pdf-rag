@@ -1,141 +1,193 @@
-# Chat with PDF - RAG Application
+# 📄 Chat With PDF — RAG Document Intelligence System
 
-A Retrieval-Augmented Generation (RAG) application that allows users to upload PDF documents and ask questions about their content using Google's Gemini LLM.
+> A production-style AI application that lets you chat with any PDF using natural language — powered by Retrieval-Augmented Generation (RAG).
 
-## Features
+![Python](https://img.shields.io/badge/Python-3.13-blue?logo=python)
+![LangChain](https://img.shields.io/badge/LangChain-latest-green)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.x-red?logo=streamlit)
+![Gemini](https://img.shields.io/badge/Google_Gemini-2.5_Flash-orange?logo=google)
+![FAISS](https://img.shields.io/badge/FAISS-Vector_DB-purple)
 
-- Upload and process PDF documents
-- Extract and chunk text intelligently
-- Build semantic search indexes using FAISS
-- Query documents using natural language
-- Powered by Google's Gemini 2.5 Flash model
-- Streamlit UI for easy interaction
+---
 
-## Project Structure
+## 🚀 Live Demo
+> Deployment coming soon
+
+---
+
+## 🧠 What is this?
+
+Chat With PDF is a full-stack RAG (Retrieval-Augmented Generation) application where users upload PDF documents and interact with them through natural language. Instead of relying on an LLM's training knowledge, the system retrieves the most relevant chunks from the actual document and grounds every answer in real content — with source page citations.
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---|---|
+| 💬 **Ask Document** | Ask any question — get grounded answers with page citations |
+| 📝 **Summarize PDF** | Generate a concise document summary instantly |
+| 🔑 **Extract Key Points** | Pull out important facts as a structured bullet list |
+| 🎓 **Explain Like Beginner** | Complex topics simplified in plain language |
+| 🎮 **Quiz Game** | AI-generated interactive quiz with scoring and feedback |
+| 🌙 **Dark / Light Theme** | Full theme toggle with persistent state |
+| ⚙️ **Settings Panel** | Live-tunable retrieval and LLM parameters |
+
+---
+
+## 🏗️ Architecture
+
+```
+PDF Upload
+    ↓
+PDF Text Extraction (PyPDF)
+    ↓
+Document Chunking (RecursiveCharacterTextSplitter)
+    ↓
+Text Embeddings (sentence-transformers/all-MiniLM-L6-v2)
+    ↓
+FAISS Vector Store (saved to disk)
+    ↓
+User Question
+    ↓
+Hybrid Retrieval (BM25 + FAISS → EnsembleRetriever)
+    ↓
+Grounded Prompt (context + question → Gemini)
+    ↓
+Answer + Page Citations
+```
+
+---
+
+## 🗂️ Project Structure
 
 ```
 chat-with-pdf-rag/
-├── .env                      # API keys (never committed to GitHub)
-├── .gitignore                # ignore venv, .env, __pycache__, etc.
-├── requirements.txt          # pinned dependencies
-├── README.md                 # project documentation
-├── app.py                    # Streamlit entry point (UI)
-├── src/
-│   ├── __init__.py
-│   ├── config.py             # loads env vars, central settings
-│   ├── pdf_loader.py         # extract text from PDFs
-│   ├── text_splitter.py      # chunking logic
-│   ├── embeddings.py         # embedding model setup
-│   ├── vector_store.py       # FAISS build/load/save
-│   ├── rag_chain.py          # retrieval + Gemini LLM chain
-│   └── logger.py             # logging setup
-├── data/
-│   ├── uploads/              # uploaded PDFs (gitignored)
-│   └── vector_store/         # saved FAISS index (gitignored)
-└── logs/                     # log files (gitignored)
+│
+├── app.py                    # Streamlit entry point
+├── requirements.txt          # All dependencies
+├── .env.example              # Template for environment variables
+├── README.md
+│
+├── src/                      # Core RAG pipeline
+│   ├── config.py             # Centralized settings
+│   ├── logger.py             # Logging setup
+│   ├── pdf_loader.py         # PDF text extraction
+│   ├── text_splitter.py      # Document chunking
+│   ├── embeddings.py         # Embedding model (MiniLM)
+│   ├── vector_store.py       # FAISS + hybrid retriever
+│   └── rag_chain.py          # LLM prompt templates + query functions
+│
+├── ui/                       # Streamlit UI components
+│   ├── styles.py             # Theme-aware CSS + particle animation
+│   ├── sidebar.py            # Sidebar navigation
+│   └── views/                # One file per view
+│       ├── welcome.py
+│       ├── chat.py
+│       ├── document.py
+│       ├── quiz.py
+│       ├── settings.py
+│       └── help.py
+│
+└── data/                     # Runtime data (gitignored)
+    ├── uploads/              # Uploaded PDFs
+    └── vector_store/         # Saved FAISS index
 ```
 
-## Setup
+---
 
-1. Clone the repository:
+## ⚙️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Language | Python 3.13 |
+| LLM | Google Gemini 2.5 Flash |
+| Embeddings | sentence-transformers/all-MiniLM-L6-v2 |
+| Vector Database | FAISS (Facebook AI Similarity Search) |
+| Keyword Search | BM25 (rank-bm25) |
+| Retrieval | LangChain EnsembleRetriever (Hybrid) |
+| PDF Extraction | PyPDF |
+| Text Splitting | LangChain RecursiveCharacterTextSplitter |
+| Frontend | Streamlit |
+| Framework | LangChain |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Python 3.10+
+- Google Gemini API key — [get one free here](https://aistudio.google.com/)
+
+### Installation
+
 ```bash
-git clone <repository-url>
+# 1. Clone the repository
+git clone https://github.com/YOUR_USERNAME/chat-with-pdf-rag.git
 cd chat-with-pdf-rag
-```
 
-2. Create virtual environment:
-```bash
+# 2. Create and activate virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
 
-3. Install dependencies:
-```bash
+# Windows
+.\venv\Scripts\Activate
+
+# Mac/Linux
+source venv/bin/activate
+
+# 3. Install dependencies
 pip install -r requirements.txt
-```
 
-4. Set up environment variables:
-```bash
+# 4. Set up environment variables
 cp .env.example .env
 # Edit .env and add your GOOGLE_API_KEY
-```
 
-5. Run the application:
-```bash
+# 5. Run the app
 streamlit run app.py
 ```
 
-## Configuration
+---
 
-All configuration is managed through `src/config.py` which loads from `.env`. Key settings:
+## 🔑 Environment Variables
 
-- `GOOGLE_API_KEY` - Your Google Generative AI API key
-- `LLM_MODEL` - Model to use (default: gemini-2.5-flash)
-- `EMBEDDING_MODEL` - Sentence transformer model (default: all-MiniLM-L6-v2)
-- `CHUNK_SIZE` - Text chunk size for splitting (default: 1000)
-- `CHUNK_OVERLAP` - Overlap between chunks (default: 200)
+Create a `.env` file in the project root:
 
-## Usage
+```
+GOOGLE_API_KEY=your_gemini_api_key_here
+```
 
-1. Launch the Streamlit app
-2. Upload PDF documents using the file uploader
-3. Ask questions about the content
-4. The RAG system retrieves relevant chunks and generates answers using Gemini
+---
 
-## Components
+## ⚠️ Known Limitations
 
-### `config.py`
-Central configuration management. Loads environment variables and provides default values.
+- Scanned / image-based PDFs are not supported (no OCR)
+- Very large documents (100+ pages) may truncate in summary modes
+- Retrieval quality depends on question phrasing — rephrase if answer seems wrong
+- Heavily designed PDF templates (Canva etc.) may extract with spacing issues
 
-### `pdf_loader.py`
-Handles PDF file reading and text extraction using PyPDF2.
+---
 
-### `text_splitter.py`
-Implements recursive character splitting for efficient chunking with overlap.
+## 🔮 Future Improvements
 
-### `embeddings.py`
-Manages the embedding model (SentenceTransformer) for converting text to vectors.
+- [ ] Multi-PDF support (combined knowledge base)
+- [ ] OCR support for scanned PDFs
+- [ ] Streaming LLM responses
+- [ ] Map-reduce summarization for large documents
+- [ ] Deployment on Streamlit Cloud
+- [ ] Persistent vector store (Pinecone / pgvector)
+- [ ] Re-ranking with cross-encoder models
 
-### `vector_store.py`
-FAISS vector store operations - creating, saving, loading, and searching indexes.
+---
 
-### `rag_chain.py`
-Orchestrates the RAG pipeline: retrieval + LLM query generation.
+## 👤 Author
 
-### `logger.py`
-Centralized logging configuration for debugging and monitoring.
+**Nikhil Pujari**
+- 📧 pujarinikhil04@gmail.com
+- 🎓 B.Sc. Data Science — Valia College, Mumbai
+- 🔗 [GitHub](https://github.com/YOUR_USERNAME)
 
-### `app.py`
-Streamlit frontend - file upload, chat interface, and result display.
+---
 
-## API Keys
+## 📄 License
 
-To use this application, you need a Google Generative AI API key:
-
-1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Create or copy your API key
-3. Add it to your `.env` file as `GOOGLE_API_KEY`
-
-## Error Handling
-
-The application includes:
-- Retry logic with exponential backoff for API rate limits
-- Graceful error messages in the UI
-- Detailed logging for debugging
-
-## Future Enhancements
-
-- Support for multiple document types (DOCX, TXT, etc.)
-- Conversation memory/history
-- Document summarization
-- Multi-language support
-- Web scraping for content addition
-- Custom prompt templates
-
-## License
-
-MIT
-
-## Support
-
-For issues or questions, please open an issue on GitHub.
+MIT License — feel free to use, modify, and distribute.
